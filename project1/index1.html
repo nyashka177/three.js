@@ -1,66 +1,57 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  
-  <head>
-    <meta charset="utf-8" />
-    <title>MDN Games: Three.js demo</title>
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-      }
-      canvas {
-        width: 100%;
-        height: 100%;
-      }
-    </style>
-    <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@v0.170.0/build/three.module.js",
-      "three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.170.0/examples/jsm/"
-    }
-  }
-</script>
-  </head>
-  <body>
-    <script src="three.min.js"></script>
-    <script>
-    import * as THREE from 'three';
-    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-    const controls = new OrbitControls( camera, renderer.domElement );
-    const loader = new GLTFLoader();
+	<head>
+		<meta charset="utf-8">
+		<title>Dottore</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+		<script type="importmap">
+			{
+				"imports": {
+					"three": "../build/three.module.js",
+					"three/addons/": "./jsm/"
+				}
+			}
+		</script>
+		
+		<script type="module">
+			import * as THREE from 'three';
       
-      var WIDTH = window.innerWidth;
-      var HEIGHT = window.innerHeight;
-      /* весь наш JavaScript-код будет после этого комментария */
+			import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+			import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 
-      var renderer = new THREE.WebGLRenderer({ antialias: true });
-      renderer.setSize(WIDTH, HEIGHT);
-      renderer.setClearColor(0xdddddd, 1);
-      document.body.appendChild(renderer.domElement);
+			const renderer = new THREE.WebGLRenderer();
+      renderer.setSize( window.innerWidth, window.innerHeight );
+      document.body.appendChild( renderer.domElement );
 
-      var scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 500 );
+      camera.position.set( 0, 0, 100 );
+      camera.lookAt( 0, 0, 0 );
 
-      var camera = new THREE.PerspectiveCamera(70, WIDTH / HEIGHT);
-      camera.position.z = 50;
-      scene.add(camera);
+      const scene = new THREE.Scene();
 
-      var boxGeometry = new THREE.BoxGeometry(10, 10, 10);
-      var basicMaterial = new THREE.MeshBasicMaterial({ color: 0x0095dd });
-      var cube = new THREE.Mesh(boxGeometry, basicMaterial);
+			const loader = new FontLoader();
 
-      scene.add(cube);
-      cube.rotation.set(0.4, 0.2, 0);
+      loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
 
-      
-function render() {
-  requestAnimationFrame(render);
-  renderer.render(scene, camera);
-}
-render();
+	    const geometry = new TextGeometry( 'Hello three.js!', {
+		font: font,
+		size: 80,
+		depth: 5,
+		curveSegments: 12,
+		bevelEnabled: true,
+		bevelThickness: 10,
+		bevelSize: 8,
+		bevelOffset: 0,
+		bevelSegments: 5
+	} );
+} );
 
-    </script>
-  </body>
+			scene.add( geometry );
+renderer.render( scene, camera );
+		</script>
+	</body>
 </html>
